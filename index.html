@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="hu">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+
+<script>
+    // Firebase konfiguráció (ezt a Firebase konzolodról szerezheted be)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBf02Y40jxiwLp_uP4pxnlqZfKHNj_B1D0",
+        authDomain: "muvhazfoglalas.firebaseapp.com",
+        databaseURL: "https://muvhazfoglalas-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "muvhazfoglalas",
+        storageBucket: "muvhazfoglalas.appspot.com",
+        messagingSenderId: "354422910423",
+        appId: "1:354422910423:web:96d60d4176ac94a15a2f92",
+        measurementId: "G-SSX59RJE0Q"
+    };
+
+    // Firebase inicializálása
+    firebase.initializeApp(firebaseConfig);
+
+    const database = firebase.database();
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Művelődési Ház Foglalási Rendszer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Művelődési Ház Foglalási Rendszer</h1>
+
+    <!-- Előadás választó -->
+    <div class="performance-selector">
+        <h2>Válassz előadást</h2>
+        <select id="performanceSelect">
+            <option value="">Válassz előadást...</option>
+        </select>
+
+        <div class="performance-buttons">
+            <button id="openAddPerformanceModal">Új előadás hozzáadása</button>
+            <button id="deletePerformanceBtn">Előadás törlése</button>
+        </div>
+        <button id="showBerletTableBtn" class="berlet-button">Bérletek megtekintése</button>
+    </div>
+
+
+    <!-- Bérlet Táblázat Modal -->
+    <div id="berletTableModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closeBerletTableModal">&times;</span>
+            <h2>Bérletek Részletezése</h2>
+            <table id="berletTable">
+                <thead>
+                    <tr>
+                        <th>Bérlet azonosító</th>
+                        <th>Név</th>
+                        <th>Előadások</th>
+                        <th>Lefoglalt helyek</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Nézőtér vizualizáció -->
+    <div class="stage">
+        <hr class="stage-line">
+        <h2>Színpad</h2>
+        <hr class="stage-line">
+    </div>
+
+    <div class="seating-chart">
+        <div id="leftSide" class="side">
+            <h3>Bal oldal</h3>
+            <div id="leftSeats" class="seats"></div>
+        </div>
+        <div id="rightSide" class="side">
+            <h3>Jobb oldal</h3>
+            <div id="rightSeats" class="seats"></div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal ablak a foglaláshoz -->
+    <div id="reservationModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closeReservationBtn">&times;</span>
+            <h2>Foglalás</h2>
+            <form id="reservationForm">
+                <label for="reservationName">Név:</label>
+                <input type="text" id="reservationName" required>
+
+                <!-- Jegytípus választó -->
+                <select id="ticketType">
+                    <option value="sima">Sima jegy</option>
+                    <option value="bérlet">Bérlet</option>
+                </select>
+
+                <!-- Előadások kiválasztása (alapértelmezetten rejtett) -->
+                <div id="performancesCheckboxesWrapper" style="display: none;">
+                    <label for="performancesCheckboxes">Előadások:</label>
+                    <div id="performancesCheckboxes">
+                        <!-- Ide jönnek az előadások checkboxai -->
+                    </div>
+                </div>
+
+                <button type="submit">Foglalás mentése</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal ablak az előadás hozzáadásához (új modal) -->
+    <div id="addPerformanceModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closeAddPerformanceModal">&times;</span>
+            <h2>Új előadás hozzáadása</h2>
+            <form id="addPerformanceForm">
+                <label for="performanceName">Előadás neve:</label>
+                <input type="text" id="performanceName" required>
+
+                <label for="performanceDate">Dátum:</label>
+                <input type="date" id="performanceDate" required>
+
+                <label for="performancePrice">Ár:</label>
+                <input type="number" id="performancePrice" required>
+
+                <label for="performanceNotes">Megjegyzés:</label>
+                <textarea id="performanceNotes"></textarea>
+
+                <button type="submit">Előadás hozzáadása</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

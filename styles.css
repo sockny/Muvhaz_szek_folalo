@@ -1,0 +1,389 @@
+/* Alapértelmezett (desktop) stílusok itt maradnak */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+h1,
+h2 {
+    text-align: center;
+    font-weight: 300;
+    color: #333;
+}
+
+.performance-form {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+label {
+    font-weight: 400;
+    color: #555;
+}
+
+button {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button.delete-btn {
+    background-color: #f44336;
+}
+
+button.delete-btn:hover {
+    background-color: #e53935;
+}
+
+/* Modal stílusok */
+.modal {
+    display: none;
+    /* Alapértelmezett: rejtett */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #e53935;
+}
+
+/* Nézőtér konténer */
+.seating-chart {
+    display: flex;
+    justify-content: center;
+    /* Center the two sides with minimal space between them */
+    gap: 10px;
+    /* Reduce the gap between left and right side */
+    margin-top: 40px;
+    padding: 10px;
+    /* Reduced padding to eliminate excessive space */
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Bal és jobb oldal felosztása */
+.side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    /* Adjust padding to create consistency */
+}
+
+.seats {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    /* 10 oszlop, 50px szélességű */
+    grid-gap: 15px;
+    /* Távolság a székek között */
+    margin-top: 20px;
+}
+
+.seat {
+    width: 50px;
+    height: 50px;
+    background-color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.seat.reserved {
+    background-color: #6f42c1;
+    color: white;
+}
+
+.seat.occupied {
+    background-color: #dc3545;
+    color: white;
+}
+
+.seat:hover {
+    background-color: #b0bec5;
+    transform: scale(1.05);
+    /* Enyhe növelés hover esetén */
+}
+
+/* Fejléc stílus */
+.seating-chart h2,
+.side h3 {
+    color: #333;
+    font-weight: 300;
+}
+
+/* Különleges helyek (pl. X-ek, nem foglalható helyek) */
+.seat.special {
+    background-color: #cfd8dc;
+    color: #757575;
+    cursor: not-allowed;
+}
+
+.seat.special::after {
+    content: "X";
+    color: #757575;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button.delete-performance-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button.delete-performance-btn:hover {
+    background-color: #e53935;
+}
+
+/* Színpad vonal és felirat stílus */
+.stage {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stage-line {
+    border: none;
+    height: 2px;
+    background-color: #333;
+    width: 45%;
+    /* A vonal két oldalra nyúlik a Színpad felirat mellett */
+}
+
+.stage h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+    margin: 0 20px;
+    /* Távolság a vonalak között */
+    white-space: nowrap;
+    /* A Színpad szöveg ne törjön új sorba */
+}
+
+/* Mobilbarát elrendezéshez 768px alatti szélességhez: */
+@media only screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .seating-chart {
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    /* Ensure rows stay in a single line and adjust seat size */
+    .seats {
+        grid-template-columns: repeat(10, 1fr);
+        grid-gap: 10px;
+    }
+
+    /* Reduce seat size and font size for seat numbers on mobile */
+    .seat {
+        width: 35px;
+        /* Smaller seat size */
+        height: 35px;
+        font-size: 12px;
+        /* Smaller seat number font */
+    }
+
+    h2,
+    h3 {
+        font-size: 1.5em;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 350px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Még kisebb eszközökhöz (pl. 480px alatti szélességű kijelzőkhöz) */
+@media only screen and (max-width: 480px) {
+    .seats {
+        grid-template-columns: repeat(10, 1fr);
+        grid-gap: 5px;
+    }
+
+    /* Further reduce seat size and seat number font size */
+    .seat {
+        width: 30px;
+        /* Even smaller seat size for very small screens */
+        height: 30px;
+        font-size: 10px;
+        /* Smaller font size for seat numbers */
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    h2,
+    h3 {
+        font-size: 1.2em;
+    }
+
+    .modal-content {
+        max-width: 320px;
+    }
+}
+
+/* Alap stílusok az előadás választó részhez */
+.performance-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.performance-selector h2 {
+    margin-bottom: 20px;
+}
+
+.performance-selector select {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+}
+
+/* Button container for better alignment */
+.performance-buttons {
+    display: flex;
+    justify-content: space-between; /* Space buttons evenly */
+    gap: 10px; /* Add space between buttons */
+    margin-top: 10px;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    width: 100%;
+    max-width: 400px; /* Keep buttons within a max width */
+}
+
+/* Button styling */
+.performance-selector button {
+    flex: 1; /* Make all buttons the same size */
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button#openAddPerformanceModal {
+    background-color: #28a745;
+    color: white;
+}
+
+button#deletePerformanceBtn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Styling the "Bérletek megtekintése" button */
+.berlet-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px; /* Add space between the upper buttons and this one */
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    cursor: pointer;
+}
+
+.berlet-button:hover {
+    background-color: #0056b3;
+}
+
+/* Mobilbarát gomb elrendezés */
+@media only screen and (max-width: 768px) {
+    .performance-buttons {
+        flex-direction: column; /* Stack buttons vertically on smaller screens */
+        align-items: stretch; /* Make sure buttons fill the width */
+    }
+
+    .performance-selector button {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .berlet-button {
+        width: 100%;
+        max-width: 300px; /* Narrower button on mobile */
+    }
+}
