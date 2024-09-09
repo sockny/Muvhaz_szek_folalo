@@ -48,7 +48,7 @@
     </div>
 
 
-    <!-- Bérlet Táblázat Modal -->
+    <!-- Updated Bérlet Táblázat Modal -->
     <div id="berletTableModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="closeBerletTableModal">&times;</span>
@@ -56,7 +56,7 @@
             <table id="berletTable">
                 <thead>
                     <tr>
-                        <th>Bérlet azonosító</th>
+                        <!-- Removed Bérlet azonosító -->
                         <th>Név</th>
                         <th>Előadások</th>
                         <th>Lefoglalt helyek</th>
@@ -66,6 +66,7 @@
             </table>
         </div>
     </div>
+
 
 
     <!-- Nézőtér vizualizáció -->
@@ -78,68 +79,78 @@
     <div class="seating-chart">
         <div id="leftSide" class="side">
             <h3>Bal oldal</h3>
-            <div id="leftSeats" class="seats"></div>
+            <div class="seating-row">
+                <div id="leftRowNumbers" class="row-numbers left-side-numbers"></div> <!-- Bal oldali sorszámok -->
+                <div id="leftSeats" class="seats"></div>
+            </div>
         </div>
+
         <div id="rightSide" class="side">
             <h3>Jobb oldal</h3>
-            <div id="rightSeats" class="seats"></div>
+            <div class="seating-row">
+                <div id="rightSeats" class="seats"></div>
+                <div id="rightRowNumbers" class="row-numbers right-side-numbers"></div> <!-- Jobb oldali sorszámok -->
+            </div>
         </div>
-    </div>
 
 
 
-    <!-- Modal ablak a foglaláshoz -->
-    <div id="reservationModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn" id="closeReservationBtn">&times;</span>
-            <h2>Foglalás</h2>
-            <form id="reservationForm">
-                <label for="reservationName">Név:</label>
-                <input type="text" id="reservationName" required>
 
-                <!-- Jegytípus választó -->
-                <select id="ticketType">
-                    <option value="sima">Sima jegy</option>
-                    <option value="bérlet">Bérlet</option>
-                </select>
 
-                <!-- Előadások kiválasztása (alapértelmezetten rejtett) -->
-                <div id="performancesCheckboxesWrapper" style="display: none;">
-                    <label for="performancesCheckboxes">Előadások:</label>
-                    <div id="performancesCheckboxes">
-                        <!-- Ide jönnek az előadások checkboxai -->
+
+
+        <!-- Modal ablak a foglaláshoz -->
+        <div id="reservationModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-btn" id="closeReservationBtn">&times;</span>
+                <h2>Foglalás</h2>
+                <form id="reservationForm">
+                    <label for="reservationName">Név:</label>
+                    <input type="text" id="reservationName" required>
+
+                    <!-- Jegytípus választó -->
+                    <select id="ticketType">
+                        <option value="sima">Sima jegy</option>
+                        <option value="bérlet">Bérlet</option>
+                    </select>
+
+                    <!-- Előadások kiválasztása (alapértelmezetten rejtett) -->
+                    <div id="performancesCheckboxesWrapper" style="display: none;">
+                        <label for="performancesCheckboxes">Előadások:</label>
+                        <div id="performancesCheckboxes">
+                            <!-- Ide jönnek az előadások checkboxai -->
+                        </div>
                     </div>
-                </div>
 
-                <button type="submit">Foglalás mentése</button>
-            </form>
+                    <button type="submit">Foglalás mentése</button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Modal ablak az előadás hozzáadásához (új modal) -->
-    <div id="addPerformanceModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn" id="closeAddPerformanceModal">&times;</span>
-            <h2>Új előadás hozzáadása</h2>
-            <form id="addPerformanceForm">
-                <label for="performanceName">Előadás neve:</label>
-                <input type="text" id="performanceName" required>
+        <!-- Modal ablak az előadás hozzáadásához (új modal) -->
+        <div id="addPerformanceModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-btn" id="closeAddPerformanceModal">&times;</span>
+                <h2>Új előadás hozzáadása</h2>
+                <form id="addPerformanceForm">
+                    <label for="performanceName">Előadás neve:</label>
+                    <input type="text" id="performanceName" required>
 
-                <label for="performanceDate">Dátum:</label>
-                <input type="date" id="performanceDate" required>
+                    <label for="performanceDate">Dátum:</label>
+                    <input type="date" id="performanceDate" required>
 
-                <label for="performancePrice">Ár:</label>
-                <input type="number" id="performancePrice" required>
+                    <label for="performancePrice">Ár:</label>
+                    <input type="number" id="performancePrice" required>
 
-                <label for="performanceNotes">Megjegyzés:</label>
-                <textarea id="performanceNotes"></textarea>
+                    <label for="performanceNotes">Megjegyzés:</label>
+                    <textarea id="performanceNotes"></textarea>
 
-                <button type="submit">Előadás hozzáadása</button>
-            </form>
+                    <button type="submit">Előadás hozzáadása</button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+        <script src="script.js"></script>
 </body>
 
 </html>

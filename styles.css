@@ -79,11 +79,12 @@ button.delete-btn:hover {
     background-color: #fff;
     padding: 30px;
     border-radius: 8px;
-    max-width: 400px;
+    max-width: 600px;
     width: 100%;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
     position: relative;
+    margin: 0 auto;
 }
 
 .close-btn {
@@ -106,7 +107,7 @@ button.delete-btn:hover {
     display: flex;
     justify-content: center;
     /* Center the two sides with minimal space between them */
-    gap: 10px;
+    /*gap: 10px;*/
     /* Reduce the gap between left and right side */
     margin-top: 40px;
     padding: 10px;
@@ -125,14 +126,14 @@ button.delete-btn:hover {
     /* Adjust padding to create consistency */
 }
 
-.seats {
+/*.seats {
     display: grid;
     grid-template-columns: repeat(10, 50px);
-    /* 10 oszlop, 50px szélességű */
+    /* 10 oszlop, 50px szélességű 
     grid-gap: 15px;
-    /* Távolság a székek között */
+    /* Távolság a székek között 
     margin-top: 20px;
-}
+}*/
 
 .seat {
     width: 50px;
@@ -159,7 +160,7 @@ button.delete-btn:hover {
 }
 
 .seat:hover {
-    background-color: #b0bec5;
+    background-color: #7eb4cf;
     transform: scale(1.05);
     /* Enyhe növelés hover esetén */
 }
@@ -324,17 +325,22 @@ button.delete-performance-btn:hover {
 /* Button container for better alignment */
 .performance-buttons {
     display: flex;
-    justify-content: space-between; /* Space buttons evenly */
-    gap: 10px; /* Add space between buttons */
+    justify-content: space-between;
+    /* Space buttons evenly */
+    gap: 10px;
+    /* Add space between buttons */
     margin-top: 10px;
-    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    flex-wrap: wrap;
+    /* Allow buttons to wrap on smaller screens */
     width: 100%;
-    max-width: 400px; /* Keep buttons within a max width */
+    max-width: 400px;
+    /* Keep buttons within a max width */
 }
 
 /* Button styling */
 .performance-selector button {
-    flex: 1; /* Make all buttons the same size */
+    flex: 1;
+    /* Make all buttons the same size */
     padding: 10px 20px;
     font-size: 16px;
     border: none;
@@ -358,7 +364,8 @@ button#deletePerformanceBtn {
     color: white;
     border: none;
     border-radius: 4px;
-    margin-top: 20px; /* Add space between the upper buttons and this one */
+    margin-top: 20px;
+    /* Add space between the upper buttons and this one */
     padding: 10px 20px;
     font-size: 16px;
     width: 100%;
@@ -373,17 +380,174 @@ button#deletePerformanceBtn {
 /* Mobilbarát gomb elrendezés */
 @media only screen and (max-width: 768px) {
     .performance-buttons {
-        flex-direction: column; /* Stack buttons vertically on smaller screens */
-        align-items: stretch; /* Make sure buttons fill the width */
+        flex-direction: column;
+        /* Stack buttons vertically on smaller screens */
+        align-items: stretch;
+        /* Make sure buttons fill the width */
     }
 
     .performance-selector button {
         padding: 12px;
         font-size: 14px;
     }
-    
+
     .berlet-button {
         width: 100%;
-        max-width: 300px; /* Narrower button on mobile */
+        max-width: 300px;
+        /* Narrower button on mobile */
     }
+}
+
+
+.seating-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    /* Hozzáadjuk, hogy a sorok között legyen hely */
+}
+
+.row-numbers {
+    display: grid;
+    grid-template-rows: repeat(14, 50px); /* 14 sor, mindegyik 50px magas */
+    gap: 10px; /* Kis távolság a sorok között */
+    justify-content: center;
+}
+
+/* Sorszám kiemelése és halványítása */
+.row-number-box {
+    background-color: #b0bec5; /* Alapértelmezett szín a sorszámokhoz */
+    color: white;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.5s ease, transform 0.5s ease, color 0.5s ease;
+}
+
+.row-number-box.highlighted {
+    background-color: #c8e7f5; /* Kiemelt szín */
+    color: #000; /* Kiemelt szövegszín */
+}
+
+.row-number-box.faded {
+    opacity: 0.3;
+}
+
+.seats {
+    display: grid;
+    grid-template-columns: repeat(10, 50px);
+    grid-gap: 10px;
+
+}
+
+.seat.reserved {
+    background-color: #6f42c1;
+    color: white;
+}
+
+.seat.occupied {
+    background-color: #dc3545;
+    color: white;
+}
+
+.seat.hidden {
+    visibility: hidden;
+}
+
+.seat.unavailable {
+    background-color: #cfd8dc;
+    color: #757575;
+    cursor: not-allowed;
+}
+
+.right-side-gap {
+    margin-left: 30px;
+    /* Rés a jobb oldalon a székek és sorok számai között */
+}
+
+/* Bal oldal sorszámai */
+.left-side-numbers {
+    margin-right: 20px; /* Kis távolság a bal oldalon a székek és a sorok számai között */
+}
+
+/* Jobb oldal sorszámai */
+.right-side-numbers {
+    margin-left: 20px; /* Kis távolság a jobb oldalon a székek és a sorok számai között */
+}
+
+/* Amikor egy sor ki van emelve */
+.highlighted {
+    background-color: #c8e7f5;
+    transform: scale(1.1);
+    z-index: 1;
+    transition: background-color 0.5s ease, transform 0.5s ease; /* Lassabb, gördülékenyebb animáció */
+    transition: color 0.3s ease-in-out;
+    color:#333;
+}
+
+/* Az elhalványított sorok stílusa */
+.faded {
+    opacity: 0.3;
+    transition: opacity 0.5s ease; /* Halványítás animációja */
+}
+
+/* Bootstrap stílusú táblázat */
+
+/* Modern, lekerekített és árnyékolt táblázat */
+table {
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 1rem;
+    color: #333;
+    border-collapse: separate; /* Használjuk a "separate" módot a szegélyek kezeléséhez */
+    border-spacing: 0 15px; /* Térköz a sorok között a lebegtetett hatás érdekében */
+    background-color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Árnyék a táblázat mögött */
+    border-radius: 15px; /* Lekerekített sarkak */
+}
+
+thead {
+    background-color: #007bff; /* Alap szín */
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+th, td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e5e5; /* Finom szegély az alsó részen */
+    text-align: center;
+    vertical-align: middle;
+}
+
+tbody tr {
+    background-color: #f8f9fa; /* Világosabb szín a sorokhoz */
+    border-radius: 10px; /* Sorok lekerekítése */
+}
+
+tbody tr:hover {
+    background-color: #e9ecef; /* Hover effektus */
+}
+
+th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+td {
+    color: #495057;
+    font-size: 16px;
+}
+
+/* Táblázat árnyékolása a sorok körül */
+tbody tr {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Finom árnyék az egyes sorokhoz */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+tbody tr:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Erősebb árnyék hover esetén */
 }

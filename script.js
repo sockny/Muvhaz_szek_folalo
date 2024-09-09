@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     //---------------------Ellenorzesek-------------------------------
-    
+
     // Az oldal betöltése után biztosítjuk, hogy minden modal rejtve van
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
@@ -83,9 +83,11 @@ document.addEventListener('DOMContentLoaded', function () {
         reservationModal.style.display = 'none'; // Modal elrejtése
     }
 
+
+    
     document.getElementById('deletePerformanceBtn').addEventListener('click', function () {
         const selectedPerformance = document.getElementById('performanceSelect').value;
-        
+
 
         if (!selectedPerformance) {
             alert('Kérlek, válassz előadást a törléshez!');
@@ -431,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteButton.remove(); // Törlés gomb eltávolítása
         });
 
-        
+
 
         function updatePerformanceSelect() {
             const performanceSelect = document.getElementById('performanceSelect');
@@ -552,20 +554,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function renderSeats() {
-        leftSeatsContainer.innerHTML = ''; // Tisztítjuk a székeket az új renderhez
+        // Kiürítjük az előző székeket és sor számokat
+        leftSeatsContainer.innerHTML = '';
         rightSeatsContainer.innerHTML = '';
+        const leftRowNumbersContainer = document.getElementById('leftRowNumbers');
+        const rightRowNumbersContainer = document.getElementById('rightRowNumbers');
+        leftRowNumbersContainer.innerHTML = '';
+        rightRowNumbersContainer.innerHTML = '';
 
         const rows = 14;
         const seatsPerRow = 10;
 
-
         firebase.database().ref('performances/' + currentPerformance + '/reservations').once('value')
             .then((snapshot) => {
-                const reservations = snapshot.val() || {}; // Ha nincs foglalás, üres objektumként kezeljük
+                const reservations = snapshot.val() || {};
 
-
-                // Bal oldal
                 for (let row = 1; row <= rows; row++) {
+                    // Sor szám hozzáadása bal oldalon
+                    // Sor szám hozzáadása bal oldalon
+                    const leftRowNumberBox = document.createElement('div');
+                    leftRowNumberBox.classList.add('row-number-box');
+                    leftRowNumberBox.dataset.row = row; // Adat attribútum hozzáadása a sorszámokhoz
+                    leftRowNumberBox.innerText = row;
+                    leftRowNumbersContainer.appendChild(leftRowNumberBox);
+
+                    // Sor szám hozzáadása jobb oldalon
+                    const rightRowNumberBox = document.createElement('div');
+                    rightRowNumberBox.classList.add('row-number-box');
+                    rightRowNumberBox.dataset.row = row; // Adat attribútum hozzáadása a sorszámokhoz
+                    rightRowNumberBox.innerText = row;
+                    rightRowNumbersContainer.appendChild(rightRowNumberBox);
+
+                    // Bal oldal székek
                     for (let seat = 1; seat <= seatsPerRow; seat++) {
                         const seatDiv = document.createElement('div');
                         seatDiv.classList.add('seat');
@@ -573,37 +593,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         seatDiv.dataset.row = row;
                         seatDiv.dataset.seat = seat;
 
-                        // Az első két sorban az 1. szék hiányzik a bal oldalon
-                        if ((row === 1 || row === 2) && (seat === 1)) {
+                        // Az első két sorban az 1. szék hiányzik
+                        if ((row === 1 || row === 2) && seat === 1) {
                             seatDiv.classList.add('hidden');
-                            leftSeatsContainer.appendChild(seatDiv);
-                            continue;
                         }
 
-                        // Az első két sorban a székek 2-től 9-ig vannak
-                        if ((row === 1 || row === 2) && seat > 1) {
-                            seatDiv.innerText = `${row}-${seat - 1}`;
-                        } else {
-                            seatDiv.innerText = `${row}-${seat}`;
-                        }
+                        seatDiv.innerText = (row === 1 || row === 2) && seat > 1 ? `${seat - 1}` : `${seat}`;
+                        //seatDiv.innerText = (row === 1 || row === 2) && seat > 1 ? `${row}-${seat - 1}` : `${row}-${seat}`;
 
-                        // 13. és 14. sor bal oldalának első 4 széke nem foglalható
-                        if (row === 13 || row === 14) {
-                            if (seat <= 4) {
-                                seatDiv.classList.add('unavailable');
-                                seatDiv.innerText = `X`;
-                                leftSeatsContainer.appendChild(seatDiv);
-                                continue;
-                            }
+                        // 13. és 14. sor első 4 széke nem foglalható
+                        if ((row === 13 || row === 14) && seat <= 4) {
+                            seatDiv.classList.add('unavailable');
+                            seatDiv.innerText = `X`;
                         }
 
                         const seatKey = `left-${row}-${seat}`;
-                        /*if (currentPerformance && performances[currentPerformance].reservations[seatKey]) {
-                            const reservation = performances[currentPerformance].reservations[seatKey];
-                            seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
-                        }*/
-
-                        // Ellenőrizzük, hogy van-e foglalás erre a székre
                         if (reservations[seatKey]) {
                             const reservation = reservations[seatKey];
                             seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
@@ -612,10 +616,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         seatDiv.addEventListener('click', handleSeatClick);
                         leftSeatsContainer.appendChild(seatDiv);
                     }
-                }
 
-                // Jobb oldal
-                for (let row = 1; row <= rows; row++) {
+                    // Jobb oldal székek
                     for (let seat = 10; seat > 0; seat--) {
                         const seatDiv = document.createElement('div');
                         seatDiv.classList.add('seat');
@@ -623,25 +625,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         seatDiv.dataset.row = row;
                         seatDiv.dataset.seat = seat;
 
-                        // Az első két sorban a 10. szék hiányzik a jobb oldalon
+                        // Az első két sorban az 1. szék hiányzik
                         if ((row === 1 || row === 2) && seat === 1) {
                             seatDiv.classList.add('hidden');
-                            rightSeatsContainer.appendChild(seatDiv);
-                            continue;
                         }
 
-                        // Az első két sorban a székek 9-től 1-ig vannak számozva a jobb oldalon
-                        if ((row === 1 || row === 2) && seat <= 10) {
-                            seatDiv.innerText = `${row}-${seat-1}`;
-                        } else {
-                            seatDiv.innerText = `${row}-${seat}`;
-                        }
+                        seatDiv.innerText = (row === 1 || row === 2) && seat <= 10 ? `${seat-1}` : `${seat}`;
+                        //seatDiv.innerText = (row === 1 || row === 2) && seat > 1 ? `${row}-${seat - 1}` : `${row}-${seat}`;
+
+                        //seatDiv.innerText = `${row}-${seat}`;
+                        //seatDiv.innerText = `${seat}`;
 
                         const seatKey = `right-${row}-${10 - seat}`;
-                        /*if (currentPerformance && performances[currentPerformance].reservations[seatKey]) {
-                            const reservation = performances[currentPerformance].reservations[seatKey];
-                            seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
-                        }*/
                         if (reservations[seatKey]) {
                             const reservation = reservations[seatKey];
                             seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
@@ -655,7 +650,77 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch((error) => {
                 console.error('Hiba történt a foglalások betöltésekor:', error);
             })
+            .finally(() => {
+
+                seatRendered();
+            });
     }
+    function seatRendered() {
+
+        document.querySelectorAll('.seat').forEach(seat => {
+            seat.addEventListener('mouseenter', handleMouseEnter);
+            seat.addEventListener('mouseleave', handleMouseLeave);
+        });
+
+
+    }
+
+
+
+    function handleMouseEnter(event) {
+        const hoveredSeat = event.target;
+        const row = hoveredSeat.dataset.row;
+
+        // Az adott sor székjeit hangsúlyosabbá tesszük
+        document.querySelectorAll(`.seat[data-row='${row}']`).forEach(seat => {
+            seat.classList.add('highlighted');
+        });
+
+        // Az adott sor sorszámait is hangsúlyosabbá tesszük
+        document.querySelectorAll(`.row-number-box[data-row='${row}']`).forEach(numberBox => {
+            numberBox.classList.add('highlighted');
+        });
+
+        // Az összes többi sor székét elhalványítjuk
+        document.querySelectorAll(`.seat:not([data-row='${row}'])`).forEach(seat => {
+            seat.classList.add('faded');
+        });
+
+        // Az összes többi sor sorszámait is elhalványítjuk
+        document.querySelectorAll(`.row-number-box:not([data-row='${row}'])`).forEach(numberBox => {
+            numberBox.classList.add('faded');
+        });
+    }
+
+    function handleMouseLeave(event) {
+        const row = event.target.dataset.row;
+
+        // Eltávolítjuk a kiemelést az adott sorról
+        document.querySelectorAll(`.seat[data-row='${row}']`).forEach(seat => {
+            seat.classList.remove('highlighted');
+        });
+
+        // Eltávolítjuk a kiemelést az adott sor sorszámáról
+        document.querySelectorAll(`.row-number-box[data-row='${row}']`).forEach(numberBox => {
+            numberBox.classList.remove('highlighted');
+        });
+
+        // Eltávolítjuk az elhalványítást az összes székről
+        document.querySelectorAll('.seat').forEach(seat => {
+            seat.classList.remove('faded');
+        });
+
+        // Eltávolítjuk az elhalványítást az összes sorszámról
+        document.querySelectorAll('.row-number-box').forEach(numberBox => {
+            numberBox.classList.remove('faded');
+        });
+    }
+
+
+
+
+
+
 
 
 
@@ -758,9 +823,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Bérletek modal megnyitása
-    document.getElementById('showBerletTableBtn').addEventListener('click', function () {
+    /*document.getElementById('showBerletTableBtn').addEventListener('click', function () {
         document.getElementById('berletTableModal').style.display = 'block';
-    });
+    });*/
 
     // Bérletek modal bezárása
     document.getElementById('closeBerletTableModal').addEventListener('click', function () {
@@ -769,11 +834,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('showBerletTableBtn').addEventListener('click', function () {
         const berletTableBody = document.getElementById('berletTable').querySelector('tbody');
-        berletTableBody.innerHTML = ''; // Tisztítjuk a táblázatot
-
-        const berletDetails = {}; // Ide gyűjtjük a bérleteket
-
-        // Végigmegyünk az összes előadáson és gyűjtjük a bérleteket
+        berletTableBody.innerHTML = ''; // Clear table
+    
+        const berletDetails = {}; // Collect bérlet details
+    
+        // Iterate over performances to collect bérlet information
         for (let performanceKey in performances) {
             const performance = performances[performanceKey];
             if (performance.reservations) {
@@ -781,44 +846,39 @@ document.addEventListener('DOMContentLoaded', function () {
                     const reservation = performance.reservations[seatKey];
                     if (reservation.ticketType === 'bérlet') {
                         const berletId = reservation.berletId;
-
-                        // Ha még nem adtuk hozzá ezt a bérletet, létrehozzuk
+    
+                        // Initialize bérlet if not already done
                         if (!berletDetails[berletId]) {
                             berletDetails[berletId] = {
                                 name: reservation.name,
                                 performances: [],
-                                seat: seatKey // Lefoglalt helyet csak egyszer rögzítjük
+                                seat: seatKey // Record seat
                             };
                         }
-
-                        // Hozzáadjuk az előadást
+    
+                        // Add performances to bérlet
                         berletDetails[berletId].performances.push(performance.name);
                     }
                 }
             }
         }
-
-        // Feltöltjük a táblázatot a bérlet részletekkel
-        if (Object.keys(berletDetails).length === 0) {
-            console.warn('Nincsenek elérhető bérletek.');
-            return;
-        }
-
+    
+        // Populate the table with bérlet details
         for (let berletId in berletDetails) {
             const berlet = berletDetails[berletId];
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${berletId}</td>
                 <td>${berlet.name}</td>
                 <td>${berlet.performances.join(', ')}</td>
-                <td>${berlet.seat}</td> <!-- Lefoglalt hely egyszer megjelenítve -->
+                <td>${berlet.seat}</td>
             `;
             berletTableBody.appendChild(row);
         }
-
-        // Megjelenítjük a modalt
+    
+        // Show the modal
         document.getElementById('berletTableModal').style.display = 'block';
     });
+    
 
 
 
