@@ -894,6 +894,22 @@ document.addEventListener('DOMContentLoaded', function () {
     renderSeats();
 });
 
+// Firebase Authentication inicializálása
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      console.log('Bejelentkezve: ', user.email);
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('reservationSection').style.display = 'block';
+    } else {
+      console.log('Nincs bejelentkezve');
+      document.getElementById('loginSection').style.display = 'block';
+      document.getElementById('reservationSection').style.display = 'none';
+    }
+  });
+
+  
+
+
 
 
 
