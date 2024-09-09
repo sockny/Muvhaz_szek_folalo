@@ -5,6 +5,8 @@
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
 <!-- Firebase Authentication SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
 
 
 <script>
@@ -54,6 +56,8 @@
             <button id="deletePerformanceBtn">Előadás törlése</button>
             <button id="showPerformanceDetailsBtn" disabled>Előadás részletei</button>
         <button id="showBerletTableBtn" class="berlet-button">Bérletek megtekintése</button>
+        <button onclick="exportToPDF()">PDF exportálása</button>
+
         
         </div>
         

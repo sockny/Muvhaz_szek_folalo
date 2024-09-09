@@ -958,11 +958,117 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 
 
+function exportToPDF() {
+    const currentPerformance = document.getElementById("performanceSelect").value;
+    
+    if(!currentPerformance){
+        alert("Kérlek válassz előadást!")
+        return;
+    }
+    // Foglalások és elfoglalt helyek összegyűjtése
+    const occupiedSeats = [];
+    const rows = 14;
+    const seatsPerRow = 10;
+
+    // Példaként használjuk a reservations adatstruktúrát, ami tartalmazza a foglalásokat
+    firebase.database().ref('performances/' + currentPerformance + '/reservations').once('value')
+        .then((snapshot) => {
+            const reservations = snapshot.val() || {};
+            for (let row = 1; row <= rows; row++) {
+                for (let seat = 1; seat <= seatsPerRow; seat++) {
+                    const leftSeatKey = `left-${row}-${seat}`;
+                    const rightSeatKey = `right-${row}-${seat}`;
+
+                    if (reservations[leftSeatKey]) {
+                        occupiedSeats.push({
+                            side: 'Bal oldal',
+                            row: row,
+                            seat: seat,
+                            name: reservations[leftSeatKey].name,
+                            ticketType: reservations[leftSeatKey].ticketType
+                        });
+                    }
+
+                    if (reservations[rightSeatKey]) {
+                        occupiedSeats.push({
+                            side: 'Jobb oldal',
+                            row: row,
+                            seat: seat,
+                            name: reservations[rightSeatKey].name,
+                            ticketType: reservations[rightSeatKey].ticketType
+                        });
+                    }
+                }
+            }
+
+            // PDF generálása
+            generatePDF(occupiedSeats);
+        })
+        .catch((error) => {
+            console.error('Hiba történt a foglalások betöltésekor:', error);
+        });
+}
+
+function generatePDF(occupiedSeats) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Előadás neve és mentés dátuma
+    const performanceName = document.getElementById("performanceSelect").options[document.getElementById("performanceSelect").selectedIndex].text;
+    const cleanPerformanceName = replaceAccents(performanceName.replace(/\s+/g, '_')); // Szóközök helyettesítése aláhúzással és ékezetek cseréje
+    const currentDate = new Date().toLocaleDateString(); // Mentés dátuma
+
+    // Címsor
+    doc.setFontSize(18);
+    doc.text(replaceAccents('Elfoglalt helyek és foglalási adatok'), 10, 10);
+
+    // Előadás neve és dátum hozzáadása
+    doc.setFontSize(14);
+    doc.text(`Elöadás: ${replaceAccents(performanceName)}`, 10, 20);  // Előadás neve cserélt karakterekkel
+    doc.text(`Exportálás dátuma: ${currentDate}`, 10, 30);  // Mentés dátuma
+
+    // Táblázat fejléc
+    doc.setFontSize(12);
+    doc.text('Oldal', 10, 40);
+    doc.text('Sor', 40, 40);
+    doc.text('Szék', 60, 40);
+    doc.text('Név', 80, 40);
+    doc.text('Jegytípus', 130, 40);
+
+    let yPosition = 50; // Kezdő pozíció a sorokhoz
+
+    occupiedSeats.forEach((seat, index) => {
+        doc.text(replaceAccents(seat.side), 10, yPosition);
+        doc.text(seat.row.toString(), 40, yPosition);
+        doc.text(seat.seat.toString(), 60, yPosition);
+        doc.text(replaceAccents(seat.name), 80, yPosition);
+        doc.text(replaceAccents(seat.ticketType), 130, yPosition);
+
+        yPosition += 10;
+        if (yPosition > 280) {
+            doc.addPage();
+            yPosition = 20;
+        }
+    });
+
+    // PDF mentése az előadás nevével és dátummal
+    doc.save(`foglalasi-adatok_${cleanPerformanceName}_${currentDate}.pdf`);
+}
+
+function replaceAccents(text) {
+    /**const accentMap = {
+        'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ö': 'o', 'ő': 'o',
+        'ú': 'u', 'ü': 'u', 'ű': 'u',
+        'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ö': 'O', 'Ő': 'O',
+        'Ú': 'U', 'Ü': 'U', 'Ű': 'U'
+    };*/
+    const accentMap = {
+        'ő': 'ö','ű': 'u',
+        'Ő': 'Ö',
+        'Ű': 'U'
+    };
 
 
-
-
-
-
-
+    return text.split('').map(char => accentMap[char] || char).join('');
+}
 
