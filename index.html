@@ -29,13 +29,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Művelődési Ház Foglalási Rendszer</title>
+    <title>Művelődési ház foglalási rendszer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <h1>Művelődési Ház Foglalási Rendszer</h1>
-    <button id="logoutBtn">Kijelentkezés</button>
+    <h1>MŰHFORR</h1>
+    <h2>(Művelődési ház foglalási rendszer)</h2>
+    
 
 
     
@@ -43,6 +44,7 @@
     <!-- Előadás választó -->
     <div class="performance-selector">
          <!--<h2>Válassz előadást</h2>-->
+         <button id="logoutBtn">Kijelentkezés</button>
         <select id="performanceSelect">
             <option value="">Válassz előadást...</option>
         </select>
@@ -52,6 +54,7 @@
             <button id="deletePerformanceBtn">Előadás törlése</button>
             <button id="showPerformanceDetailsBtn" disabled>Előadás részletei</button>
         <button id="showBerletTableBtn" class="berlet-button">Bérletek megtekintése</button>
+        
         </div>
         
         
@@ -62,7 +65,7 @@
     <div id="berletTableModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="closeBerletTableModal">&times;</span>
-            <h2>Bérletek Részletezése</h2>
+            <h2>Bérletek részletezése</h2>
             <table id="berletTable">
                 <thead>
                     <tr>
@@ -164,7 +167,7 @@
     <div id="performanceDetailsModal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" id="closePerformanceDetailsModal">&times;</span>
-            <h2>Előadás Részletei</h2>
+            <h2>Előadás részletei</h2>
             <p><strong>Név:</strong> <span id="performanceNameDetails"></span></p>
             <p><strong>Dátum:</strong> <span id="performanceDateDetails"></span></p>
             <p><strong>Ár:</strong> <span id="performancePriceDetails"></span></p>
