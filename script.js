@@ -892,22 +892,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Székek megjelenítése a DOM-ba
     renderSeats();
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+        firebase.auth().signOut().then(() => {
+            console.log('Sikeres kijelentkezés');
+            // Átirányítás a bejelentkezési oldalra
+            window.location.href = 'login.html';
+        }).catch((error) => {
+            console.error('Hiba történt a kijelentkezés során:', error.message);
+        });
+    });
+    
 });
 
-// Firebase Authentication inicializálása
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      console.log('Bejelentkezve: ', user.email);
-      document.getElementById('loginSection').style.display = 'none';
-      document.getElementById('reservationSection').style.display = 'block';
+        console.log('Bejelentkezve: ', user.email);
+        // További logika, ha be van jelentkezve a felhasználó
     } else {
-      console.log('Nincs bejelentkezve');
-      document.getElementById('loginSection').style.display = 'block';
-      document.getElementById('reservationSection').style.display = 'none';
+        console.log('Nincs bejelentkezve');
+        // Ha nincs bejelentkezve, átirányítjuk a bejelentkezési oldalra
+        window.location.href = 'login.html';
     }
-  });
-
-  
+});
 
 
 
