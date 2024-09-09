@@ -1,12 +1,33 @@
+/* Particle.js teljesképernyős háttér */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* A háttér mögött tartjuk */
+    background-color: #122541; /* Sötét háttér */
+}
+
+/* Test és html alapstílus */
 body, html {
     height: 100%;
     margin: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f4f4f4;
 }
 
+/* Címsor stílus */
+.login-title {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Login container */
 .login-container {
     display: flex;
     justify-content: center;
@@ -14,14 +35,16 @@ body, html {
     height: 100vh;
 }
 
+/* Login box */
 .login-box {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9); /* Átlátszó fehér háttér */
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
+/* Gombok stílusa */
 button {
     padding: 10px 20px;
     font-size: 16px;
@@ -30,6 +53,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
