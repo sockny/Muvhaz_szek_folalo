@@ -50,8 +50,11 @@
         <div class="performance-buttons">
             <button id="openAddPerformanceModal">Új előadás hozzáadása</button>
             <button id="deletePerformanceBtn">Előadás törlése</button>
-        </div>
+            <button id="showPerformanceDetailsBtn" disabled>Előadás részletei</button>
         <button id="showBerletTableBtn" class="berlet-button">Bérletek megtekintése</button>
+        </div>
+        
+        
     </div>
 
 
@@ -156,6 +159,18 @@
                 </form>
             </div>
         </div>
+
+        <!-- Előadások részleteit megjelenítő modal -->
+    <div id="performanceDetailsModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="closePerformanceDetailsModal">&times;</span>
+            <h2>Előadás Részletei</h2>
+            <p><strong>Név:</strong> <span id="performanceNameDetails"></span></p>
+            <p><strong>Dátum:</strong> <span id="performanceDateDetails"></span></p>
+            <p><strong>Ár:</strong> <span id="performancePriceDetails"></span></p>
+            <p><strong>Megjegyzés:</strong> <span id="performanceNotesDetails"></span></p>
+        </div>
+    </div>
 
         <script src="script.js"></script>
 </body>

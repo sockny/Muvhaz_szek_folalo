@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    
+
     document.getElementById('deletePerformanceBtn').addEventListener('click', function () {
         const selectedPerformance = document.getElementById('performanceSelect').value;
 
@@ -630,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             seatDiv.classList.add('hidden');
                         }
 
-                        seatDiv.innerText = (row === 1 || row === 2) && seat <= 10 ? `${seat-1}` : `${seat}`;
+                        seatDiv.innerText = (row === 1 || row === 2) && seat <= 10 ? `${seat - 1}` : `${seat}`;
                         //seatDiv.innerText = (row === 1 || row === 2) && seat > 1 ? `${row}-${seat - 1}` : `${row}-${seat}`;
 
                         //seatDiv.innerText = `${row}-${seat}`;
@@ -835,9 +835,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('showBerletTableBtn').addEventListener('click', function () {
         const berletTableBody = document.getElementById('berletTable').querySelector('tbody');
         berletTableBody.innerHTML = ''; // Clear table
-    
+
         const berletDetails = {}; // Collect bérlet details
-    
+
         // Iterate over performances to collect bérlet information
         for (let performanceKey in performances) {
             const performance = performances[performanceKey];
@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const reservation = performance.reservations[seatKey];
                     if (reservation.ticketType === 'bérlet') {
                         const berletId = reservation.berletId;
-    
+
                         // Initialize bérlet if not already done
                         if (!berletDetails[berletId]) {
                             berletDetails[berletId] = {
@@ -855,14 +855,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                 seat: seatKey // Record seat
                             };
                         }
-    
+
                         // Add performances to bérlet
                         berletDetails[berletId].performances.push(performance.name);
                     }
                 }
             }
         }
-    
+
         // Populate the table with bérlet details
         for (let berletId in berletDetails) {
             const berlet = berletDetails[berletId];
@@ -874,11 +874,11 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
             berletTableBody.appendChild(row);
         }
-    
+
         // Show the modal
         document.getElementById('berletTableModal').style.display = 'block';
     });
-    
+
 
 
 
@@ -902,10 +902,50 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Hiba történt a kijelentkezés során:', error.message);
         });
     });
-    
+
+    function handlePerfomaceDetails() {
+        const performanceDetailsModal = document.getElementById('performanceDetailsModal');
+        const closePerformanceDetailsModal = document.getElementById('closePerformanceDetailsModal');
+        const showPerformanceDetailsBtn = document.getElementById('showPerformanceDetailsBtn');
+        const performanceSelect = document.getElementById('performanceSelect');
+
+        // Modal bezárás
+        closePerformanceDetailsModal.addEventListener('click', function () {
+            performanceDetailsModal.style.display = 'none';
+        });
+
+        // Gomb engedélyezése, ha kiválasztottak egy előadást
+        performanceSelect.addEventListener('change', function () {
+            const selectedPerformance = this.value;
+            showPerformanceDetailsBtn.disabled = !selectedPerformance;
+        });
+
+        // Előadás részleteinek megtekintése gomb kattintásra
+        showPerformanceDetailsBtn.addEventListener('click', function () {
+            const selectedPerformance = performanceSelect.value;
+            if (selectedPerformance) {
+                openPerformanceDetails(selectedPerformance);
+            }
+        });
+
+        // Modal megnyitása előadás részleteihez
+        function openPerformanceDetails(performanceKey) {
+            const performance = performances[performanceKey];
+            if (performance) {
+                document.getElementById('performanceNameDetails').innerText = performance.name;
+                document.getElementById('performanceDateDetails').innerText = performance.date;
+                document.getElementById('performancePriceDetails').innerText = performance.price;
+                document.getElementById('performanceNotesDetails').innerText = performance.notes || 'Nincs megjegyzés';
+
+                performanceDetailsModal.style.display = 'flex';
+            }
+        }
+    }
+    handlePerfomaceDetails();
+
 });
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         console.log('Bejelentkezve: ', user.email);
         // További logika, ha be van jelentkezve a felhasználó
