@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function closeModal() {
         reservationModal.classList.add('hidden');
         reservationModal.style.display = 'none'; // Modal elrejtése
+
     }
 
 
@@ -246,6 +247,8 @@ document.addEventListener('DOMContentLoaded', function () {
             existingDeleteButton.remove();
         }
 
+
+
         // Alapértelmezés: "Sima jegy" kiválasztása és előadások elrejtése
         document.getElementById('ticketType').value = 'sima';
         document.getElementById('performancesCheckboxesWrapper').style.display = 'none';
@@ -299,13 +302,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //openModal();
 
+
         // Ellenőrizzük, hogy létezik-e a kiválasztott előadás és a foglalás
         if (currentPerformance && performances[currentPerformance] && performances[currentPerformance].reservations && performances[currentPerformance].reservations[seatKey]) {
             // Ha a szék már foglalt, töltsük be a foglalás részleteit a modalba
             const reservation = performances[currentPerformance].reservations[seatKey];
             document.getElementById('reservationName').value = reservation.name;
             document.getElementById('ticketType').value = reservation.ticketType;
+        } else {
+            // Ha nincs foglalás, hagyjuk üresen a mezőket
+            document.getElementById('reservationName').value = '';
+            document.getElementById('ticketType').value = 'sima'; // Alapértelmezett: sima jegy
         }
+
 
         // A mentés most már frissíteni fogja az adatokat
         reservationForm.onsubmit = function (e) {
@@ -384,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 seatDiv.classList.add('occupied');
 
-                // Foglalás mentése a Firebase-be
+                /*// Foglalás mentése a Firebase-be
                 firebase.database().ref('performances/' + currentPerformance + '/reservations/' + seatKey).set({
                     name: name,
                     ticketType: ticketType
@@ -392,7 +401,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.log(`Foglalás mentése ${currentPerformance} előadásra sikeres.`);
                 }).catch(error => {
                     console.error('Hiba történt a foglalás mentésekor:', error);
-                });
+                });*/
+                // Szék stílusának frissítése
+                seatDiv.classList.add(ticketType === 'bérlet' ? 'reserved' : 'occupied');
+
+                // Foglalás mentése Firebase-be
+                saveReservation(currentPerformance, seatKey, { name, ticketType });
+
             }
 
             closeModal();
@@ -567,6 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         firebase.database().ref('performances/' + currentPerformance + '/reservations').once('value')
             .then((snapshot) => {
+                console.log(snapshot.val())
                 const reservations = snapshot.val() || {};
 
                 for (let row = 1; row <= rows; row++) {
@@ -611,6 +627,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (reservations[seatKey]) {
                             const reservation = reservations[seatKey];
                             seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
+                            console.log("seat: " + seatKey + "szín: " + reservation.ticketType)
+                        } else {
+                            if (seatDiv.classList.contains('reserved')) {
+                                seatDiv.classList.remove('reserved');
+                                console.log("seat: " + seatKey + ", Reserved tag removed!")
+                            }
+                            
+                            // Ellenőrizzük, hogy a seatDiv tartalmazza-e az 'occupied' osztályt, és eltávolítjuk, ha igen
+                            if (seatDiv.classList.contains('occupied')) {
+                                seatDiv.classList.remove('occupied');
+                                console.log("seat: " + seatKey + ", Occupied tag removed!")
+                               
+                            }
+
                         }
 
                         seatDiv.addEventListener('click', handleSeatClick);
@@ -636,10 +666,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         //seatDiv.innerText = `${row}-${seat}`;
                         //seatDiv.innerText = `${seat}`;
 
-                        const seatKey = `right-${row}-${10 - seat}`;
+                        const seatKey = `right-${row}-${seat}`;
                         if (reservations[seatKey]) {
                             const reservation = reservations[seatKey];
                             seatDiv.classList.add(reservation.ticketType === 'bérlet' ? 'reserved' : 'occupied');
+                            console.log("seat: " + seatKey + "szín: " + reservation.ticketType)
+                        } else {
+                            if (seatDiv.classList.contains('reserved')) {
+                                seatDiv.classList.remove('reserved');
+                                console.log("seat: " + seatKey + ", Reserved tag removed!")
+                            }
+                            
+                            // Ellenőrizzük, hogy a seatDiv tartalmazza-e az 'occupied' osztályt, és eltávolítjuk, ha igen
+                            if (seatDiv.classList.contains('occupied')) {
+                                seatDiv.classList.remove('occupied');
+                                console.log("seat: " + seatKey + ", Occupied tag removed!")
+                               
+                            }
+
                         }
 
                         seatDiv.addEventListener('click', handleSeatClick);
@@ -817,6 +861,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (reservationModal) {
             reservationModal.classList.remove('hidden');
             reservationModal.style.display = 'flex'; // Modal megjelenítése
+
         } else {
             console.error('Foglalás modal nem található.');
         }
@@ -960,8 +1005,8 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 function exportToPDF() {
     const currentPerformance = document.getElementById("performanceSelect").value;
-    
-    if(!currentPerformance){
+
+    if (!currentPerformance) {
         alert("Kérlek válassz előadást!")
         return;
     }
@@ -1063,7 +1108,7 @@ function replaceAccents(text) {
         'Ú': 'U', 'Ü': 'U', 'Ű': 'U'
     };*/
     const accentMap = {
-        'ő': 'ö','ű': 'u',
+        'ő': 'ö', 'ű': 'u',
         'Ő': 'Ö',
         'Ű': 'U'
     };
